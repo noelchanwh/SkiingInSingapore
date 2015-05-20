@@ -75,22 +75,9 @@ var enableStepByStepTesting = function () {
 
 
 var testStepByStep = function (y, x) {
-
-    startPointValue = endPointValue = currentSmallestEndPointValue = graph[y][x];
-    currentLongestPath = 0;
-
     console.log('-----------------------------------');
     console.log('startPointValue ' + startPointValue);
-
-    // CHECK THE GRID WITH RECURIVE
-    gridChecker(y, x, 0);
-    // NOW THAT BEST PATH FOR THE CELL WILL BE OUTPUT
-    if (globalLongestPath <= currentLongestPath) {
-        globalLongestPath = currentLongestPath;
-        globalSmallestEndPointValue = currentSmallestEndPointValue;
-        globalDrop = startPointValue - currentSmallestEndPointValue;
-    }
-
+    testLogic(y, x);
     //console.log({globalLongestPath, globalSmallestEndPointValue, globalDrop});
     console.log('-----------------------------------');
 }
@@ -98,31 +85,38 @@ var testStepByStep = function (y, x) {
 var testInLoop = function () {
     for (var y = 0; y < gridDimension; y++) {
         for (var x = 0; x < gridDimension; x++) {
-            
-            startPointValue = endPointValue = currentSmallestEndPointValue = graph[y][x];
-            currentLongestPath = 0;
-
-            // CHECK THE GRID WITH RECURIVE
-            gridChecker(y, x, 0);
-            // NOW THAT BEST PATH FOR THE CELL WILL BE OUTPUT
-            if (globalLongestPath <= currentLongestPath) {
-                globalLongestPath = currentLongestPath;
-                globalSmallestEndPointValue = currentSmallestEndPointValue;
-                globalDrop = startPointValue - currentSmallestEndPointValue;
-            }
+            testLogic(y, x);
         }
     }
-    
-    
     console.log('--- THE LONGEST PATH FOR SKIING ---');
     //console.log({globalLongestPath, globalSmallestEndPointValue, globalDrop});
     console.log('email: ' + globalLongestPath.toString(10) + globalDrop.toString(10) + '@redmart.com');
     console.log('-----------------------------------');
     
-    document.writeln('globalLongestPath ' + globalLongestPath);
+    document.writeln('<br \><br \>globalLongestPath ' + globalLongestPath);
     document.writeln('<br \>globalSmallestEndPointValue ' + globalSmallestEndPointValue);
     document.writeln('<br \>globalDrop ' + globalDrop);
     document.writeln('<br \>email: ' + globalLongestPath.toString(10) + globalDrop.toString(10) + '@redmart.com');
+}
+
+
+var testLogic = function(y, x) {
+    startPointValue = endPointValue = currentSmallestEndPointValue = graph[y][x];
+    currentLongestPath = 0;
+
+    // CHECK THE GRID WITH RECURIVE
+    gridChecker(y, x, 0);
+    // NOW THAT BEST PATH FOR THE CELL WILL BE OUTPUT
+    if (globalLongestPath < currentLongestPath) {
+        globalLongestPath = currentLongestPath;
+        globalSmallestEndPointValue = currentSmallestEndPointValue;
+        globalDrop = startPointValue - currentSmallestEndPointValue;                
+    } else if (globalLongestPath == currentLongestPath && globalDrop < (startPointValue - currentSmallestEndPointValue)) {
+        // SINCE NOW BOTH ARE EQUAL IN DISTANCE CHECK WHICH HAS A BETTER DROP
+        globalLongestPath = currentLongestPath;
+        globalSmallestEndPointValue = currentSmallestEndPointValue;
+        globalDrop = startPointValue - currentSmallestEndPointValue;
+    }
 }
 
 
